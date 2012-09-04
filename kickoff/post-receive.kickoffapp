@@ -1,0 +1,168 @@
+#!/bin/sh
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Kickoff hook
+#
+# Can be installed as a remote post-receive hook.
+#
+# Could be also installed as a local post-commit
+# hook. Comment out the gitlist="..."-line though.
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+# Config
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+. $(pwd)/hooks/config.kickoffapp
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+ #   ##   #  ###  ## ### ##      ###  #  ### ###   #
+ #   # # # # # # #   #   # #       # # # # # #     #
+ #   # # ### # # # # ##  ##       #  # # # # ##    #
+###  # # # # # # # # #   # #     #   # # # # #    ###
+ #   ##  # # # #  ## ### # #     ###  #  # # ###   #
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Silent output function
+function e {
+	if [ $output ]; then
+		echo $1
+	fi
+}
+ 
+while read oldrev newrev refname
+do
+
+	e ""
+	e "Kickoff Hook"
+	e ""
+
+	e $oldrev" » "$newrev
+
+	#
+	# Get the working dir
+	#
+	
+	workingdir=$(pwd)
+	
+	#
+	# Trim working dir to get repo name (/var/www/git/repo.git > repo.git)
+	#
+	
+	repo=$(echo ${workingdir##*/})
+	
+	#
+	# Build the url (http://gitlist.yourdomain.com/repo.git/commit/)
+	#
+	
+	url=$(echo "$gitlist/$repo/commit/")
+	
+	# # # # # # # # # # # # # # # # # # # # # # # # # # #
+	#
+	# Config hints
+	#
+	# # # # # # # # # # # # # # # # # # # # # # # # # # #
+	
+	if  [ ! $id ] || [ ! $token ] || [ ! $gitlist ]; then
+		echo ""
+		echo "* Kickoff Hook config *************************"
+		echo "*"
+	fi
+	
+	if [ ! $id ]; then
+		echo "* - define your kickoff id"
+	fi
+	
+	if [ ! $token ]; then
+		echo "* - define your kickoff token"
+	fi
+	
+	if [ ! $gitlist ]; then
+		echo "* - optionally define your gitlist installation"
+	fi
+	
+	if [ ! $id ] || [ ! $token ] || [ ! $gitlist ]; then
+		echo "*"
+		echo "***********************************************"
+		echo ""
+	fi
+	
+	#
+	# Exit if some important info is missing
+	#
+	
+	if [ ! $id ] || [ ! $token ] ; then 
+		exit
+	fi
+	
+	# # # # # # # # # # # # # # # # # # # # # # # # # # #
+	#
+	# Delivering commits
+	#
+	# # # # # # # # # # # # # # # # # # # # # # # # # # #
+	
+	e "Delivering commits..."
+	e ""
+	
+	#
+	# for the last commits
+	#
+	
+	for i in $(git log --reverse --pretty=format:"%h" $oldrev..$newrev) ; do
+		
+	
+		e "$i..."
+
+		#
+		# deliver commit
+		#
+
+		e "...delivering..."
+
+		#
+		# get hash, author and commitmsg
+		#
+
+		commits=$(git log --pretty=format:"%h;%an;%s" | grep $i)
+
+		#
+		# split
+		#
+
+		set -- "$commits" 
+		IFS=";"; declare -a commit_arr=($*)
+
+		commit_hash=${commit_arr[0]}
+		commit_author=${commit_arr[1]}
+		commit_msg=${commit_arr[2]}
+
+		#
+		# Curl it up
+		#
+
+		break=$'\n'
+		
+		#
+		# gitlist link if info is provided
+		#
+		
+		if [ $gitlist ]; then 
+			gitlistlink="$break—$url$commit_hash"
+		fi
+
+		#
+		# curl
+		#
+
+		curl -d "<request><message>\"$commit_msg\" by $commit_author in $repo$gitlistlink</message></request>" http://api.kickoffapp.com/projects/$id/chat?token=$token > /dev/null 2>&1
+		e "...delivered!"
+	done
+
+done
+
