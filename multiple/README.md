@@ -2,7 +2,7 @@
 
 ---
 
-You could also use this snippet to use one hook with multiple repos.
+You could also use this snippet for using a single hook with multiple repos.
 
 Copy *post-receive.multiple* to `yourrepo.git/hooks`.
 
