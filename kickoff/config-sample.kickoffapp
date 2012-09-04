@@ -4,12 +4,6 @@ id="12345"
 # Kickoff Token
 token="xxXXxxXXXXXXxXXXxXXXXxXXxXXXXxxx"
 
-# Absolute path to history file
-history="/absolute/path/to/history/"
-
-# Number of commit to check. Leave blank for all (might cause a little latency though)
-amount="20"
-
 # Gitlist installation e.g. http://gitlist.yourdomain.com
 gitlist="http://gitlist.yourdomain.com"
 
