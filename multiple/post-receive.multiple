@@ -1,0 +1,9 @@
+#!/bin/sh
+ 
+FILE=mktemp
+cat - > $FILE
+ 
+cat $FILE | /path/to/hooks/post-receive1
+cat $FILE | /path/to/hooks/post-receive2
+ 
+rm $FILE
