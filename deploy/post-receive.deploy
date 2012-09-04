@@ -1,0 +1,10 @@
+tree=/home/gitgit/gitHooks
+
+echo ""
+echo "Updating working dir..."
+
+GIT_WORK_TREE=$tree git checkout -f
+echo $tree
+
+echo "...finished updating!"
+echo ""
