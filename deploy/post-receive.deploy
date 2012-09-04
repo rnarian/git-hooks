@@ -1,4 +1,6 @@
-tree=/home/gitgit/gitHooks
+#!/bin/sh
+
+tree=/path/to/working-tree
 
 echo ""
 echo "Updating working dir..."
