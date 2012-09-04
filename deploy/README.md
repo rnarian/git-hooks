@@ -12,6 +12,6 @@ Edit $tree to match your working tree
 
 In `yourrepo.git`:
 
-    git config core.worktree /path/to/working-tree
-    git config receive.denycurrentbranch ignore
+    $ git config core.worktree /path/to/working-tree
+    § git config receive.denycurrentbranch ignore
 
