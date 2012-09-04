@@ -164,6 +164,6 @@ do
 		curl -d "<request><message>\"$commit_msg\" by $commit_author in $repo$gitlistlink</message></request>" http://api.kickoffapp.com/projects/$id/chat?token=$token > /dev/null 2>&1
 		e "...delivered!"
 	done
-
+	e ""
 done
 
