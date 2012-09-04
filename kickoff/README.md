@@ -26,5 +26,5 @@ Create new file *post-receive* in `yourrepo.git/hooks` with the following conten
     cat $FILE | /absolute/path/to/shared-git-hooks/post-receive.kickoffapp
     
     rm $FILE
- 
+
 And make it executable `chmod +x path/to/shared-git-hooks/post-receive`
