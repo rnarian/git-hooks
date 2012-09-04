@@ -42,9 +42,10 @@ do
 	e ""
 	e "Kickoff Hook"
 	e ""
-
-	e $oldrev" » "$newrev
-
+	e "« "$oldrev
+	e "» "$newrev
+	e ""
+	
 	#
 	# Get the working dir
 	#
